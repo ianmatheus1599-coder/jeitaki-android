@@ -50,8 +50,10 @@ jobs:
           packages: 'platform-tools'
       - name: Instalar plataforma Android
         run: sdkmanager --install "platforms;android-36" "build-tools;36.0.0"
-      - name: Corrigir dependencia esbuild do projeto exportado
-        run: npm pkg delete devDependencies.esbuild
+      - name: Compatibilizar ferramentas do projeto exportado
+        run: |
+          npm pkg delete devDependencies.esbuild
+          npm pkg set 'devDependencies.typescript=^5.9.3'
       - name: Instalar dependencias
         run: npm install --no-audit --no-fund
       - name: Validar arquivos
