@@ -43,14 +43,13 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      # O runner ubuntu-latest ja inclui o Android SDK. Evita a action
-      # setup-android@v3 que chama o pacote descontinuado "tools".
-      - name: Preparar Android SDK preinstalado
-        run: |
-          echo "ANDROID_HOME=${ANDROID_HOME:-$ANDROID_SDK_ROOT}" >> "$GITHUB_ENV"
-          sdkmanager --version
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+      # v4 corrige o pacote legado 'tools' removido do repositório Android.
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - name: Instalar plataforma Android
+        run: sdkmanager --install "platforms;android-36" "build-tools;36.0.0"
       - name: Instalar dependencias
         run: npm install --no-audit --no-fund
       - name: Validar arquivos
